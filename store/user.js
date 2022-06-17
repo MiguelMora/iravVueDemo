@@ -1,4 +1,4 @@
-import { initAuth, signOut, signIn, createUser, emailReset, emailVerification } from '~/services/fireinit'
+import { initAuth, logOut, logIn, createUser, emailReset, emailVerification } from '~/services/fireinit'
 
 export const state = () => ({
   user: {
@@ -48,14 +48,14 @@ export const actions = {
     }
   },
   async logout({ commit, dispatch }) {
-    await signOut()
+    await logOut()
   },
   async signUserUp({ state, commit, dispatch }, { email, password }) {
     await createUser(email, password)
     return state.user
   },
   async signUserIn({ commit, state, dispatch }, { email, password }) {
-    await signIn(email, password)
+    await logIn(email, password)
     return state.user
   },
   async resetPasswordWithEmail({ commit }, email) {

@@ -4,6 +4,9 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signOut
 } from 'firebase/auth'
 
 import { firebaseConfig } from '~/services/config'
@@ -51,23 +54,23 @@ export async function createUser(email, password) {
   return userCredential.user
 }
 
-export async function signIn(email, password) {
+export async function logIn(email, password) {
   const userCredential = await signInWithEmailAndPassword(initAuth(), email, password)
   return userCredential.user
 }
 
-export async function signOut() {
-  await initAuth().signOut()
+export async function logOut() {
+  await signOut(initAuth())
 }
 
 export async function emailReset(email) {
-  await initAuth().sendPasswordResetEmail(email)
+  await sendPasswordResetEmail(initAuth(), email)
 }
 
 export async function emailVerification(l) {
   const auth = initAuth()
   if (auth.currentUser) {
-    await auth.currentUser.sendEmailVerification()
+    await sendEmailVerification(auth.currentUser)
     return true
   }
   else {
