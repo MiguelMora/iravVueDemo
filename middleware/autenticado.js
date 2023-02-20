@@ -1,7 +1,10 @@
-export default function({ store, redirect, route }) {
+import { useUserStore } from '@/stores/user'
+
+export default function({ $pinia, redirect, route }) {
+  const userStore = useUserStore($pinia)
   const loginPage = '/login'
-  if (!store.getters['user/logged']) {
-    store.commit('user/setAfterLogin', route.path)
+  if (!userStore.logged) {
+    userStore.setAfterLogin(route.path)
     redirect(loginPage)
   }
 }
