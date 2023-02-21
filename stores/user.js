@@ -2,9 +2,9 @@ import { defineStore } from 'pinia'
 
 import {
   initAuth,
-  signIn,
+  logIn,
   createUser,
-  signOut,
+  logOut,
   emailReset,
   emailVerification,
 } from '~/services/fireinit'
@@ -35,7 +35,7 @@ export const useUserStore = defineStore('user', {
       return this.user
     },
     async signUserIn({ email, password }) {
-      await signIn(email, password)
+      await logIn(email, password)
       return this.user
     },
     async resetPasswordWithEmail(email) {
@@ -45,7 +45,7 @@ export const useUserStore = defineStore('user', {
       return await emailVerification()
     },
     async logout() {
-      await signOut()
+      await logOut()
     },
     initAuth() {
       if (!this.authInit) {

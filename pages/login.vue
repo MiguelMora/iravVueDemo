@@ -4,7 +4,6 @@
 
 <script>
 import { mapState, mapActions } from 'pinia'
-import i18n from '@/mixins/i18n'
 import { useUserStore } from '@/stores/user'
 
 export default {
@@ -44,7 +43,7 @@ export default {
         else await this.signUserIn(user)
       } catch (error) {
         const code = error.code.substring(5)
-        this.error = this.erroCode[code] ? this.errorCode[code] : code
+        this.error = this.errorCode[code] ? this.errorCode[code] : code
       }
     },
   },
