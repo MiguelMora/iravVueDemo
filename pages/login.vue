@@ -17,8 +17,8 @@ export default {
       'email-already-in-use': 'Email already in use, try to sign in instead'
     }
   }),
-  async fetch() {
-    await this.initAuth()
+  created() {
+    this.initAuth()
   },
   computed: {
     ...mapState(useUserStore, ['afterLogin', 'logged']),
@@ -27,7 +27,10 @@ export default {
     logged: {
       immediate: true,
       handler(logged) {
-        if (logged) this.$router.push(this.afterLogin)
+        if (logged) {
+          const router = useRouter();
+          router.push(this.afterLogin)
+        }
       },
     },
   },

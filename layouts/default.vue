@@ -27,7 +27,7 @@
 
     <v-main>
         <v-container>
-        <nuxt-page />
+        <slot />
       </v-container>
     </v-main>
   </v-app>
