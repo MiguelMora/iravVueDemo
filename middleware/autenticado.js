@@ -1,10 +1,12 @@
 import { useUserStore } from '@/stores/user'
 
-export default function({ $pinia, redirect, route }) {
-  const userStore = useUserStore($pinia)
+export default defineNuxtRouteMiddleware((to, from) => {
+
+  const userStore = useUserStore()
   const loginPage = '/login'
   if (!userStore.logged) {
-    userStore.setAfterLogin(route.path)
-    redirect(loginPage)
+    userStore.setAfterLogin(to.path)
+    return navigateTo(loginPage)
   }
-}
+
+})
