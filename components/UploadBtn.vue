@@ -4,16 +4,16 @@
       :id="id"
       :name="name"
       :accept="accept"
-      v-on:change="fileChanged"
       :multiple="multiple"
       type="file"
+      @change="fileChanged"
     />
     <label
       v-if="ripple"
       :id="`label${id}`"
+      v-ripple
       :for="id"
       :class="`v-btn ${classes}${color2} upload-btn`"
-      v-ripple
     >
       <slot name="icon-left" />
       {{ icon ? '' : title }}
@@ -37,80 +37,80 @@ export default {
   props: {
     accept: {
       default: '*',
-      type: String
+      type: String,
     },
     block: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     depressed: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     fileChangedCallback: {
       default: undefined,
-      type: Function
+      type: Function,
     },
     color: {
       default: 'primary',
-      type: String
+      type: String,
     },
     disabled: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     flat: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     hover: {
       default: true,
-      type: Boolean
+      type: Boolean,
     },
     icon: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     large: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     loading: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     multiple: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     name: {
       default: 'uploadFile',
-      type: String
+      type: String,
     },
     outline: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     ripple: {
       default: true,
-      type: Boolean
+      type: Boolean,
     },
     round: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     small: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     title: {
       default: 'Upload',
-      type: String
+      type: String,
     },
     uniqueId: {
       default: false,
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   computed: {
     id() {
@@ -131,7 +131,7 @@ export default {
         'v-btn--round': this.round,
         'v-btn--small': this.small,
         'v-btn--disabled': this.disabled,
-        'v-btn--depressed': this.depressed
+        'v-btn--depressed': this.depressed,
       }
 
       let classString = ''
@@ -141,7 +141,7 @@ export default {
         }
       }
       return classString
-    }
+    },
   },
   methods: {
     fileChanged(e) {
@@ -160,8 +160,8 @@ export default {
           }
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

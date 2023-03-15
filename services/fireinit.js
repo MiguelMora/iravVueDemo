@@ -7,7 +7,7 @@ import {
   connectAuthEmulator,
   sendEmailVerification,
   sendPasswordResetEmail,
-  signOut
+  signOut,
 } from 'firebase/auth'
 
 import { firebaseConfig } from '~/services/config'
@@ -19,20 +19,20 @@ const useEmulator = process.env.UseEmulator || false
 let app
 let auth
 
-export function initApp(){
+export function initApp() {
   if (!app) app = initializeApp(firebaseConfig)
   return app
 }
 
-export function initAuth(userCallback){
+export function initAuth(userCallback) {
   // Initialize Firebase
   if (!auth) {
     auth = getAuth(initApp())
     if (useEmulator) {
-      connectAuthEmulator(auth, "http://localhost:9099");
+      connectAuthEmulator(auth, 'http://localhost:9099')
     }
   }
-  if (userCallback){
+  if (userCallback) {
     onAuthStateChanged(auth, userCallback)
   }
   return auth
@@ -40,10 +40,14 @@ export function initAuth(userCallback){
 
 function getCurrentUserPromise(auth) {
   return new Promise((resolve, reject) => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      unsubscribe()
-      resolve(user)
-    }, reject)
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        unsubscribe()
+        resolve(user)
+      },
+      reject
+    )
   })
 }
 
@@ -59,12 +63,16 @@ export async function createUser(email, password) {
     email,
     password
   )
-  return userCredential? userCredential.user : null
+  return userCredential ? userCredential.user : null
 }
 
 export async function logIn(email, password) {
-  const userCredential = await signInWithEmailAndPassword(initAuth(), email, password)
-  return userCredential? userCredential.user : null
+  const userCredential = await signInWithEmailAndPassword(
+    initAuth(),
+    email,
+    password
+  )
+  return userCredential ? userCredential.user : null
 }
 
 export async function logOut() {
@@ -75,13 +83,12 @@ export async function emailReset(email) {
   await sendPasswordResetEmail(initAuth(), email)
 }
 
-export async function emailVerification(l) {
+export async function emailVerification() {
   const auth = initAuth()
   if (auth.currentUser) {
     await sendEmailVerification(auth.currentUser)
     return true
-  }
-  else {
-    throw new Error("User not logged, can not send verification email")
+  } else {
+    throw new Error('User not logged, can not send verification email')
   }
 }

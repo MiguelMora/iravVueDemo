@@ -1,5 +1,9 @@
 <template>
-  <a-login :error="userStore.error" @signIn="userStore.signUserIn" @signUp="userStore.signUserUp"></a-login>
+  <a-login
+    :error="userStore.error"
+    @sign-in="userStore.signUserIn"
+    @sign-up="userStore.signUserUp"
+  ></a-login>
 </template>
 
 <script>
@@ -7,26 +11,25 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/user'
 
 export default {
-  setup(){
+  setup() {
     const userStore = useUserStore()
-    const {logged} = storeToRefs(userStore)
+    const { logged } = storeToRefs(userStore)
     const router = useRouter()
-    watch (
+    watch(
       logged,
       (logged) => {
         if (logged) {
           router.push(userStore.afterLogin)
         }
       },
-      {immediate: true}
+      { immediate: true }
     )
-    return {userStore}
+    return { userStore }
   },
-  mounted(){
+  mounted() {
     this.userStore.initAuth()
   },
 }
-
 </script>
 
 <style scoped></style>

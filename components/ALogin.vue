@@ -45,6 +45,7 @@ export default {
       default: '',
     },
   },
+  emits: ['signIn', 'signUp'],
   data: () => ({
     valid: false,
     show: false,

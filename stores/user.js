@@ -10,7 +10,7 @@ import {
 } from '~/services/fireinit'
 
 export const useUserStore = defineStore('user', {
-  state:() => ({
+  state: () => ({
     user: null,
     authInit: false,
     afterLogin: '/', // where to go after login completes
@@ -20,8 +20,8 @@ export const useUserStore = defineStore('user', {
       'user-disabled': 'User account is disabled',
       'user-not-found': 'User not found, try to sign up instead',
       'wrong-password': 'Wrong password',
-      'email-already-in-use': 'Email already in use, try to sign in instead'
-    }
+      'email-already-in-use': 'Email already in use, try to sign in instead',
+    },
   }),
   getters: {
     uid: (state) => (state.user ? state.user.uid : ''),
@@ -74,17 +74,16 @@ export const useUserStore = defineStore('user', {
       }
       return this.authInit
     },
-    async _doAction(promise) {  // internal function to capture auth errors
+    async _doAction(promise) {
+      // internal function to capture auth errors
       try {
         this.clearError()
         return await promise
-      }
-      catch (error) {
+      } catch (error) {
         const code = error.code.substring(5)
         this.error = this.errorCode[code] ? this.errorCode[code] : code
         return null
       }
     },
-  }
+  },
 })
-
