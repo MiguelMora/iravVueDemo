@@ -59,7 +59,8 @@ export const useUserStore = defineStore('user', {
       await this._doAction(logOut())
     },
     initAuth() {
-      if (!this.authInit) {
+      if (!this.authInit && !useRuntimeConfig().IsServer) {
+        // client side only!
         this.authInit = true
         initAuth((user) => {
           if (user)

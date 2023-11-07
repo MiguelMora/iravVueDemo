@@ -14,4 +14,12 @@ export default defineNuxtConfig({
   },
   modules: ['@pinia/nuxt'],
   ssr: false,
+  runtimeConfig: {
+    // Override it with environment variables starting with NUXT, _ as separator
+    // except public ones, these variables can only be read from the server
+    IsServer: true, // to detect if in the server side or not, because the browser can not read it
+    public: {
+      // public constants can be universally accessed, in both browser and server
+    },
+  },
 })
