@@ -24,7 +24,7 @@ export function initApp() {
   return app
 }
 
-export function initAuth(userCallback) {
+function doInitAuth() {
   // Initialize Firebase
   if (!auth) {
     auth = getAuth(initApp())
@@ -32,7 +32,12 @@ export function initAuth(userCallback) {
       connectAuthEmulator(auth, 'http://localhost:9099')
     }
   }
+  return auth
+}
+
+export function setAuthCallback(userCallback) {
   if (userCallback) {
+    auth = doInitAuth()
     onAuthStateChanged(auth, userCallback)
   }
   return auth
@@ -52,14 +57,14 @@ function getCurrentUserPromise(auth) {
 }
 
 export const getCurrentUser = async () => {
-  const auth = initAuth()
+  const auth = doInitAuth()
   if (auth.currentUser) return auth.currentUser
   return await getCurrentUserPromise(auth)
 }
 
 export async function createUser(email, password) {
   const userCredential = await createUserWithEmailAndPassword(
-    initAuth(),
+    doInitAuth(),
     email,
     password
   )
@@ -68,7 +73,7 @@ export async function createUser(email, password) {
 
 export async function logIn(email, password) {
   const userCredential = await signInWithEmailAndPassword(
-    initAuth(),
+    doInitAuth(),
     email,
     password
   )
@@ -76,15 +81,15 @@ export async function logIn(email, password) {
 }
 
 export async function logOut() {
-  await signOut(initAuth())
+  await signOut(doInitAuth())
 }
 
 export async function emailReset(email) {
-  await sendPasswordResetEmail(initAuth(), email)
+  await sendPasswordResetEmail(doInitAuth(), email)
 }
 
 export async function emailVerification() {
-  const auth = initAuth()
+  const auth = doInitAuth()
   if (auth.currentUser) {
     await sendEmailVerification(auth.currentUser)
     return true

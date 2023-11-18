@@ -33,40 +33,35 @@
   </v-app>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia'
+<script setup>
+import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/user'
-export default {
-  data: () => ({
-    drawer: false,
-    title: 'Vue 3 Demo',
-    items: [
-      {
-        icon: 'mdi-apps',
-        title: 'Welcome',
-        to: '/',
-      },
-      {
-        icon: 'mdi-chart-bubble',
-        title: 'Inspire',
-        to: '/inspire',
-      },
-      {
-        icon: 'mdi-chart-bubble',
-        title: 'Users',
-        to: '/users',
-      },
-    ],
-  }),
-  computed: {
-    ...mapState(useUserStore, ['logged']),
+
+const store = useUserStore()
+const drawer = ref(false)
+const title = ref('Vue 3 Demo')
+const items = ref([
+  {
+    icon: 'mdi-apps',
+    title: 'Welcome',
+    to: '/',
   },
-  methods: {
-    ...mapActions(useUserStore, ['logout']),
-    async doLogout() {
-      await this.logout()
-      await this.$router.push('/')
-    },
+  {
+    icon: 'mdi-chart-bubble',
+    title: 'Inspire',
+    to: '/inspire',
   },
+  {
+    icon: 'mdi-chart-bubble',
+    title: 'Users',
+    to: '/users',
+  },
+])
+
+const { logged } = storeToRefs(store)
+
+async function doLogout() {
+  await store.logout()
+  navigateTo('/')
 }
 </script>

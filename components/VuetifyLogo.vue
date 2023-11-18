@@ -2,7 +2,7 @@
   <img class="vuetify-logo" alt="Vuetify Logo" src="/vuetify-logo.svg" />
 </template>
 
-<style>
+<style scoped>
 .vuetify-logo {
   height: 180px;
   width: 180px;

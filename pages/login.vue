@@ -6,30 +6,24 @@
   ></a-login>
 </template>
 
-<script>
+<script setup>
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/user'
 
-export default {
-  setup() {
-    const userStore = useUserStore()
-    const { logged } = storeToRefs(userStore)
-    const router = useRouter()
-    watch(
-      logged,
-      (logged) => {
-        if (logged) {
-          router.push(userStore.afterLogin)
-        }
-      },
-      { immediate: true }
-    )
-    return { userStore }
+const userStore = useUserStore()
+const { logged } = storeToRefs(userStore)
+watch(
+  logged,
+  (logged) => {
+    if (logged) {
+      const newPath = userStore.afterLogin
+      userStore.setAfterLogin('/')
+      navigateTo(newPath)
+    }
   },
-  mounted() {
-    this.userStore.initAuth()
-  },
-}
+  { immediate: true }
+)
+await userStore.initAuth()
 </script>
 
 <style scoped></style>

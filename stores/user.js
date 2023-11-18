@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 import {
-  initAuth,
+  setAuthCallback,
   logIn,
   createUser,
   logOut,
@@ -9,82 +9,105 @@ import {
   emailVerification,
 } from '~/services/fireinit'
 
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    user: null,
-    authInit: false,
-    afterLogin: '/', // where to go after login completes
-    error: '', // last auth error message
-    errorCode: {
-      'invalid-email': 'Invalid e-mail',
-      'user-disabled': 'User account is disabled',
-      'user-not-found': 'User not found, try to sign up instead',
-      'wrong-password': 'Wrong password',
-      'email-already-in-use': 'Email already in use, try to sign in instead',
-    },
-  }),
-  getters: {
-    uid: (state) => (state.user ? state.user.uid : ''),
-    logged: (state) => state.user !== null,
-    email: (state) => (state.user ? state.user.email : ''),
-    name: (state) =>
-      state.user
-        ? state.user.displayName
-          ? state.user.displayName
-          : state.user.email
-        : '',
-  },
-  actions: {
-    setAfterLogin(url) {
-      this.afterLogin = url
-    },
-    clearError() {
-      this.error = ''
-    },
-    async signUserUp({ email, password }) {
-      await this._doAction(createUser(email, password))
-      return this.user
-    },
-    async signUserIn({ email, password }) {
-      await this._doAction(logIn(email, password))
-      return this.user
-    },
-    async resetPasswordWithEmail(email) {
-      await this._doAction(emailReset(email))
-    },
-    async sendVerificationEmail() {
-      await this._doAction(emailVerification())
-    },
-    async logout() {
-      await this._doAction(logOut())
-    },
-    initAuth() {
-      if (!this.authInit && !useRuntimeConfig().IsServer) {
-        // client side only!
-        this.authInit = true
-        initAuth((user) => {
-          if (user)
-            this.user = {
-              displayName: user.displayName,
-              email: user.email,
-              uid: user.uid,
-              emailVerified: user.emailVerified,
-            }
-          else this.user = null
-        })
-      }
-      return this.authInit
-    },
-    async _doAction(promise) {
-      // internal function to capture auth errors
-      try {
-        this.clearError()
-        return await promise
-      } catch (error) {
-        const code = error.code.substring(5)
-        this.error = this.errorCode[code] ? this.errorCode[code] : code
-        return null
-      }
-    },
-  },
+export const useUserStore = defineStore('user', () => {
+  const user = ref(null)
+  const authInit = ref(false)
+  const afterLogin = ref('/') // where to go after login completes
+  const error = ref('') // last auth error message
+  const errorCode = ref({
+    'invalid-email': 'Invalid e-mail',
+    'user-disabled': 'User account is disabled',
+    'user-not-found': 'User not found, try to sign up instead',
+    'wrong-password': 'Wrong password',
+    'email-already-in-use': 'Email already in use, try to sign in instead',
+  })
+
+  const uid = computed(() => (user.value ? user.value.uid : ''))
+  const logged = computed(() => user.value !== null)
+  const email = computed(() => (user.value ? user.value.email : ''))
+
+  name = computed(() =>
+    user.value
+      ? user.value.displayName
+        ? user.value.displayName
+        : user.value.email
+      : ''
+  )
+
+  function setAfterLogin(url) {
+    // console.log('Afterlogin changed from: ' + afterLogin.value + ' to: ' + url)
+    afterLogin.value = url
+  }
+  function clearError() {
+    error.value = ''
+  }
+
+  async function signUserUp({ email, password }) {
+    await _doAction(createUser(email, password))
+    return user.value
+  }
+
+  async function signUserIn({ email, password }) {
+    await _doAction(logIn(email, password))
+    return user.value
+  }
+  async function logout() {
+    await _doAction(logOut())
+  }
+
+  async function resetPasswordWithEmail(email) {
+    await _doAction(emailReset(email))
+  }
+
+  async function sendVerificationEmail() {
+    await _doAction(emailVerification())
+  }
+
+  function initAuth() {
+    if (!authInit.value && !useRuntimeConfig().IsServer) {
+      // client side only!
+      authInit.value = true
+      setAuthCallback((newUser) => {
+        if (newUser)
+          user.value = {
+            displayName: newUser.displayName,
+            email: newUser.email,
+            uid: newUser.uid,
+            emailVerified: newUser.emailVerified,
+          }
+        else user.value = null
+      })
+    }
+    return authInit.value
+  }
+  async function _doAction(promise) {
+    // internal function to capture auth errors
+    try {
+      clearError()
+      return await promise
+    } catch (err) {
+      const code = err.code.substring(5)
+      error.value = errorCode.value[code] || code
+      return null
+    }
+  }
+  return {
+    user,
+    authInit,
+    afterLogin,
+    error,
+    errorCode,
+    uid,
+    logged,
+    email,
+    name,
+    setAfterLogin,
+    clearError,
+    signUserIn,
+    signUserUp,
+    logout,
+    resetPasswordWithEmail,
+    sendVerificationEmail,
+    initAuth,
+  }
 })

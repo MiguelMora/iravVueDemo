@@ -4,14 +4,10 @@
   </v-card>
 </template>
 
-<script>
-export default {
-  setup() {
-    definePageMeta({
-      middleware: 'autenticado', // poner en todas las páginas que requieran autenticación
-    })
-  },
-}
+<script setup>
+definePageMeta({
+  middleware: 'autenticado',
+})
 </script>
 
 <style scoped></style>
