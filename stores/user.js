@@ -26,7 +26,7 @@ export const useUserStore = defineStore('user', () => {
   const logged = computed(() => user.value !== null)
   const email = computed(() => (user.value ? user.value.email : ''))
 
-  name = computed(() =>
+  const name = computed(() =>
     user.value
       ? user.value.displayName
         ? user.value.displayName
