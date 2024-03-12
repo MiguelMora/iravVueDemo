@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <v-alert v-if="!!error" :dismissible="true" type="error">{{
+          <v-alert v-if="!!error" :closable="true" type="error">{{
             error
           }}</v-alert>
         </v-col>
