@@ -10,6 +10,8 @@ import {
   signOut,
 } from 'firebase/auth'
 
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
+
 import { firebaseConfig } from '~/services/config'
 // copia en /services/config.js el fichero .json con la configuración de firebase
 // similar al ejemplo /services/config.js.example
@@ -18,9 +20,13 @@ const useEmulator = process.env.UseEmulator || false
 
 let app
 let auth
+let db
 
 export function initApp() {
-  if (!app) app = initializeApp(firebaseConfig)
+  if (!app) {
+    console.log('Inicializando firebase')
+    app = initializeApp(firebaseConfig)
+  }
   return app
 }
 
@@ -51,7 +57,7 @@ function getCurrentUserPromise(auth) {
         unsubscribe()
         resolve(user)
       },
-      reject
+      reject,
     )
   })
 }
@@ -66,7 +72,7 @@ export async function createUser(email, password) {
   const userCredential = await createUserWithEmailAndPassword(
     doInitAuth(),
     email,
-    password
+    password,
   )
   return userCredential ? userCredential.user : null
 }
@@ -75,7 +81,7 @@ export async function logIn(email, password) {
   const userCredential = await signInWithEmailAndPassword(
     doInitAuth(),
     email,
-    password
+    password,
   )
   return userCredential ? userCredential.user : null
 }
@@ -96,4 +102,14 @@ export async function emailVerification() {
   } else {
     throw new Error('User not logged, can not send verification email')
   }
+}
+
+export function getDB() {
+  if (!db) {
+    db = getFirestore(initApp())
+    if (useEmulator) {
+      connectFirestoreEmulator(db, '127.0.0.1', 8080)
+    }
+  }
+  return db
 }

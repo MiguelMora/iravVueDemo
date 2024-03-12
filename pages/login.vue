@@ -12,18 +12,21 @@ import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 const { logged } = storeToRefs(userStore)
-watch(
-  logged,
-  (logged) => {
-    if (logged) {
-      const newPath = userStore.afterLogin
-      userStore.setAfterLogin('/')
-      navigateTo(newPath)
-    }
-  },
-  { immediate: true }
-)
-await userStore.initAuth()
+
+onMounted(() => {
+  userStore.initAuth()
+  watch(
+    logged,
+    (logged) => {
+      if (logged) {
+        const newPath = userStore.afterLogin
+        userStore.setAfterLogin('/')
+        navigateTo(newPath)
+      }
+    },
+    { immediate: true },
+  )
+})
 </script>
 
 <style scoped></style>
