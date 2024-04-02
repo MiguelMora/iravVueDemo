@@ -56,6 +56,11 @@ const items = ref([
     title: 'Users',
     to: '/users',
   },
+    {
+    icon: 'mdi-movie',
+    title: 'Pelis',
+    to: '/pelis',
+  },
 ])
 
 const { logged } = storeToRefs(store)
