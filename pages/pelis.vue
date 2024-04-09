@@ -1,9 +1,14 @@
 <script setup>
   import { usePelisStore } from '~/stores/pelis.js'
-
+  definePageMeta({
+    middleware: ["autenticado"]
+    // or middleware: 'auth'
+  })
   const pelisStore = usePelisStore()
   import ListaPelis from '~/components/ListaPelis.vue'
   import AddFilm from '~/components/AddFilm.vue'
+
+  pelisStore.subscribe()
 </script>
 
 <template>

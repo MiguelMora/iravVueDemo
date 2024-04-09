@@ -44,12 +44,12 @@ export const usePelisStore = defineStore('pelis', () => {
    */
 
   function borrar(pos){
-    remove(pelis[pos].id)
+    remove(pelis.value[pos].id)
   }
   return ({path,
     filter,
     documents,
     listener,
     listening,
-    error, pelis, add, borrar})
+    error, pelis, add, borrar, subscribe, unsubscribe})
 })
